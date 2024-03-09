@@ -3,17 +3,17 @@ using Entities;
 using Systems;
 using TMPro;
 using UnityEngine;
+using View;
 
 public class Economy : MonoBehaviour
 {
     public Team team;
-    [SerializeField] private TextMeshProUGUI moneyText;
     private Player player;
     private Shop shop;
 
     private void Start()
     {
-        player = new Player(team, moneyText);
+        player = new Player(team);
         shop = new Shop();
     }
     
@@ -26,16 +26,13 @@ public class Economy : MonoBehaviour
             set
             {
                 money = value;
-                moneyText.text = $"${money}";
+                MoneyCounter.UpdateMoneyText(money.ToString());
             }
         }
         public readonly Team Team;
-        private readonly TextMeshProUGUI moneyText;
-
-        public Player(Team team, TextMeshProUGUI moneyText)
+        public Player(Team team)
         {
             Team = team;
-            this.moneyText = moneyText;
             Money = 100;
         }
     }

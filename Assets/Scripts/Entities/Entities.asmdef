@@ -1,3 +1,4 @@
 ﻿{
-  "name": "Entities"
+  "name": "Entities",
+  "references": ["Assets/Scripts/MyUtility.dll"]
 }
