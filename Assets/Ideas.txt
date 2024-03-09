@@ -1,0 +1,12 @@
+Economy:
+
+Big money on a count down
+Increased passive income when sending enemies
+Money when killing enemies
+
+Spend money on:
+
+Sending units
+Building towers
+Upgrade units
+Upgrade towers
