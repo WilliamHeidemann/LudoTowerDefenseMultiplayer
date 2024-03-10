@@ -23,10 +23,9 @@ namespace Systems
         [SerializeField] private List<Transform> yellowTowerSpots;
 
         [SerializeField] private TowerConfiguration configuration;
-        
-        public void SpawnTower(Team team)
-        {
-            var spots = team switch
+
+        private List<Transform> Spots(Team team) =>
+            team switch
             {
                 Team.Red => redTowerSpots,
                 Team.Green => greenTowerSpots,
@@ -35,6 +34,11 @@ namespace Systems
                 _ => throw new ArgumentOutOfRangeException(nameof(team), team, null)
             };
 
+        public bool CanBuyTowers(Team team) => Spots(team).Any();
+
+        public void SpawnTower(Team team)
+        {
+            var spots = Spots(team);
             if (!spots.Any()) return;
             var spot = spots.First();
             spots.RemoveAt(0);

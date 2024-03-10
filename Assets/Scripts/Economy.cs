@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Entities;
 using Systems;
 using TMPro;
@@ -18,6 +19,13 @@ public class Economy : NetworkBehaviour
     {
         player = new Player(moneyText);
         shop = new Shop();
+    }
+
+    private void Update()
+    {
+        if (IsHost) 
+            if(Input.GetKeyDown(KeyCode.Space)) 
+                PayPlayersRpc(100);
     }
 
     public override void OnNetworkSpawn()
@@ -62,13 +70,11 @@ public class Economy : NetworkBehaviour
     private void BuyUnitRpc(ulong clientId)
     {
         const int unitCost = 10;
-        if (bank[clientId] >= unitCost)
-        {
-            var team = TeamLookup.Get(clientId);
-            SpawnUnitRpc(team);
-            bank[clientId] -= unitCost;
-            DeductMoneyRpc(unitCost, clientId);
-        }
+        if (bank[clientId] < unitCost) return;
+        var team = TeamLookup.Get(clientId);
+        SpawnUnitRpc(team);
+        bank[clientId] -= unitCost;
+        DeductMoneyRpc(unitCost, clientId);
     }
     [Rpc(SendTo.ClientsAndHost)] private void DeductMoneyRpc(int amount, ulong clientId)
     {
@@ -85,19 +91,20 @@ public class Economy : NetworkBehaviour
     private void BuyTowerRpc(ulong clientId)
     {
         const int towerCost = 100;
-        if (bank[clientId] >= towerCost)
-        {
-            var team = TeamLookup.Get(clientId);
-            SpawnTowerRpc(team);
-            bank[clientId] -= towerCost;
-            DeductMoneyRpc(towerCost, clientId);
-        }
+        if (bank[clientId] < towerCost) return;
+        var team = TeamLookup.Get(clientId);
+        if (!shop.TowerSpawner.CanBuyTowers(team)) return;
+        SpawnTowerRpc(team);
+        bank[clientId] -= towerCost;
+        DeductMoneyRpc(towerCost, clientId);
     }
     [Rpc(SendTo.ClientsAndHost)] private void SpawnTowerRpc(Team team) => 
         shop.TowerSpawner.SpawnTower(team);
 
-    public void PayPlayer(int amount)
+    [Rpc(SendTo.ClientsAndHost)]
+    public void PayPlayersRpc(int amount)
     {
         player.Money += amount;
+        if (IsHost) foreach (var playerId in bank.Keys.ToList()) bank[playerId] += amount;
     }
 }
