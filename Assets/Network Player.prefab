@@ -66,4 +66,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe6b913259c49dda332890031a0363c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  economyPrefab: {fileID: 0}
+  economyPrefab: {fileID: 2235410955380224440, guid: 0c097205ec1ba1443b9f44343e54a28b, type: 3}

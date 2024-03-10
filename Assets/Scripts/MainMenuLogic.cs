@@ -6,15 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuLogic : MonoBehaviour
 {
-    public void Host()
+    public async void Host()
     {
-        NetworkManager.Singleton.StartHost();
         SceneManager.LoadScene(sceneBuildIndex: 1);
+        await Awaitable.NextFrameAsync();
+        NetworkManager.Singleton.StartHost();
     }
 
-    public void Join()
+    public async void Join()
     {
-        NetworkManager.Singleton.StartClient();
         SceneManager.LoadScene(sceneBuildIndex: 1);
+        await Awaitable.NextFrameAsync();
+        NetworkManager.Singleton.StartClient();
     }
 }
